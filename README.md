@@ -1,6 +1,8 @@
 # dfield8
 Interactive app to study a given first order ODE
 
+**Update April 2026**: Updated to remove reliance on the deprecated function `whitebg` so that it works with MATLAB R2025a and above. Tested in R2026a and also in R2019a to ensure that the changes were backwards compatible.
+
 [![View dfield8 on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/71408-dfield8)
 
 This is a nice interactive tool to study first order ODEs, which was originally created by John Polking at Rice University (together with other tools such as pplane and odesolve).
