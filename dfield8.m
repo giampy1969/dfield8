@@ -25,6 +25,8 @@ function output = dfield8(action,input1,input2,input3)
 %  
 %  Modified in April 2019 by Giampiero Campa for versions R2014b and later
 %  Copyright 2019 The MathWorks, Inc.
+% 
+%  Modified in April 2026 by Mike Croucher for versions 2026a and later
 
   startstr = 'dfield8';
 
@@ -1047,7 +1049,8 @@ function output = dfield8(action,input1,input2,input3)
       else
 	dfdisp = figure('name','dfield8 Display',...
 			'NumberTitle','off','interrupt','on',...
-			'visible','off','tag','dfield8');
+			'visible','off','tag','dfield8', ...
+			'menubar','figure','toolbar','none');
 	dfield8('figdefault',dfdisp);
 	dud = get(dfdisp,'user');	
 	dud.syst = sud.c;
@@ -3136,8 +3139,8 @@ function output = dfield8(action,input1,input2,input3)
     switch style
      case 'black'
       % if isunix | isvms, gamma = 0.5; else gamma = 0.0; end
-      whitebg(fig,[0,0,0])
-      if isunix | isvms
+      localWhitebg(fig,[0,0,0])
+      if isunix
 	fc = [.35 .35 .35];
       else
 	fc = [.2 .2 .2];
@@ -3151,16 +3154,16 @@ function output = dfield8(action,input1,input2,input3)
       set(fig,'colormap',jet(64))
       set(fig,'defaultsurfaceedgecolor',[0 0 0]);
      case 'white'
-      whitebg(fig,[1 1 1])
+      localWhitebg(fig,[1 1 1])
       set(fig,'color',[.8 .8 .8])
       set(fig,'defaultaxescolor',[1 1 1])
       set(fig,'defaultaxescolororder', ...
 	      [0 0 1;0 .5 0;1 0 0;0 .75 .75;.75 0 .75;.75 .75 0;.25 .25 .25]) % bgrymck
       set(fig,'colormap',jet(64))
       set(fig,'defaultsurfaceedgecolor',[0 0 0])
-      
+
      case 'test'
-      whitebg(fig,[1 1 1])
+      localWhitebg(fig,[1 1 1])
       set(fig,'color',[.8 .8 .8])
       set(fig,'defaultaxescolor',[1 1 1])
       set(fig,'defaultaxescolororder', ...
@@ -3170,7 +3173,7 @@ function output = dfield8(action,input1,input2,input3)
       % set(fig,'defaultuicontrolbackgroundcolor',[1 1 1]);
       
      case 'display'
-      whitebg(fig,[1 1 1])
+      localWhitebg(fig,[1 1 1])
       set(fig,'defaultaxescolor',[1 1 1])
       set(fig,'defaultaxescolororder', ...
 	      [0 0 1;0 .5 0;1 0 0;0 .75 .75;.75 0 .75;.75 .75 0;.25 .25 .25]) % bgrymck
@@ -3180,7 +3183,7 @@ function output = dfield8(action,input1,input2,input3)
       set(fig,'defaultuicontrolbackgroundcolor',[1 1 1]*220/255);
       
      case 'bw'
-      whitebg(fig,[0 0 0])
+      localWhitebg(fig,[0 0 0])
       set(fig,'color',[0 0 0])
       set(fig,'defaultaxescolor',[0 0 0])
       set(fig,'defaultaxescolororder', ...
@@ -4566,3 +4569,22 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+function localWhitebg(fig,bg)
+% Replacement for the removed built-in whitebg(fig,bg). Sets the axes
+% background colour and picks a contrasting foreground (axes lines, ticks,
+% grids, text, lines, patches) so labels stay readable. Uses only graphics
+% Default* properties that have existed since HG1, so this works on both
+% modern MATLAB (where whitebg no longer exists) and the older releases
+% dfield8 previously targeted (R2014b+).
+fg = 1 - bg;
+set(fig, ...
+    'DefaultAxesColor',          bg, ...
+    'DefaultAxesXColor',         fg, ...
+    'DefaultAxesYColor',         fg, ...
+    'DefaultAxesZColor',         fg, ...
+    'DefaultAxesGridColor',      fg, ...
+    'DefaultAxesMinorGridColor', fg, ...
+    'DefaultTextColor',          fg, ...
+    'DefaultLineColor',          fg, ...
+    'DefaultPatchFaceColor',     fg, ...
+    'DefaultPatchEdgeColor',     fg);
